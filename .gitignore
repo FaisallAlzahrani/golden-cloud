@@ -1,0 +1,24 @@
+# Configuration with sensitive data
+config.php
+
+# Local environment files
+.env
+.env.local
+
+# Database dumps
+*.sql
+
+# Log files
+*.log
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Cache files
+*.cache
+
+# User uploaded content (optional)
+# Uncomment if you don't want to include these in the repository
+# assets/uploads/*
+# !assets/uploads/.gitkeep
