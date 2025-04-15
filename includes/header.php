@@ -82,8 +82,8 @@ ini_set('display_errors', 0);
                 </ul>
             </nav>
             <div class="language-switcher">
-                <a href="?lang=en" class="lang-btn <?php echo getSetting('site_language') == 'en' || !getSetting('site_language') ? 'active' : ''; ?>">EN</a>
-                <a href="?lang=ar" class="lang-btn <?php echo getSetting('site_language') == 'ar' ? 'active' : ''; ?>">AR</a>
+                <a href="?lang=en" class="lang-btn <?php echo $_SESSION['site_language'] == 'en' ? 'active' : ''; ?>">EN</a>
+                <a href="?lang=ar" class="lang-btn <?php echo $_SESSION['site_language'] == 'ar' ? 'active' : ''; ?>">AR</a>
             </div>
             <div class="mobile-menu-toggle">
                 <i class="fas fa-bars"></i>

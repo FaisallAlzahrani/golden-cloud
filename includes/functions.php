@@ -15,18 +15,29 @@ error_reporting(E_ALL);
 function handleLanguageSwitching() {
     // Include config if not already included
     if (!defined('DEFAULT_LANGUAGE')) {
-        require_once __DIR__ . '/../config.php';
+        if (file_exists(__DIR__ . '/../config.php')) {
+            require_once __DIR__ . '/../config.php';
+        } else {
+            define('DEFAULT_LANGUAGE', 'en');
+        }
     }
     
     // Check if language is set in GET parameter
     if (isset($_GET['lang']) && in_array($_GET['lang'], ['en', 'ar'])) {
         $_SESSION['site_language'] = $_GET['lang'];
-        // We'll update the setting after getSetting is defined
+        // Update the database setting for this language
+        if (function_exists('updateSetting')) {
+            updateSetting('site_language', $_GET['lang']);
+        }
     } 
     // Check if language is set in session
     elseif (isset($_SESSION['site_language'])) {
         // Keep using the session language
     } 
+    // Try to get from database
+    elseif (function_exists('getSetting') && getSetting('site_language')) {
+        $_SESSION['site_language'] = getSetting('site_language');
+    }
     // Otherwise use default from config
     else {
         $_SESSION['site_language'] = DEFAULT_LANGUAGE;
