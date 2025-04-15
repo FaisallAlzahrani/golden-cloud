@@ -118,11 +118,52 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
-    // Image lightbox for gallery
+    // Image lightbox for gallery - Improved implementation
     const galleryItems = document.querySelectorAll('.gallery-item img');
     
+    // Create a style element for lightbox styles
+    const lightboxStyles = document.createElement('style');
+    lightboxStyles.textContent = `
+        .lightbox {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 999999 !important; /* Extra high z-index */
+        }
+        .lightbox-content {
+            position: relative;
+            max-width: 90%;
+            max-height: 90%;
+        }
+        .lightbox-content img {
+            max-width: 100%;
+            max-height: 90vh;
+            border: 3px solid #fff;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+        }
+        .lightbox-close {
+            position: absolute;
+            top: -40px;
+            right: 0;
+            color: #fff;
+            font-size: 30px;
+            cursor: pointer;
+        }
+    `;
+    document.head.appendChild(lightboxStyles);
+    
     galleryItems.forEach(item => {
-        item.addEventListener('click', function() {
+        item.addEventListener('click', function(e) {
+            // Prevent the default action (important for Fancybox conflict)
+            e.preventDefault();
+            e.stopPropagation();
+            
             const lightbox = document.createElement('div');
             lightbox.className = 'lightbox';
             
@@ -139,14 +180,26 @@ document.addEventListener('DOMContentLoaded', function() {
             lightboxContent.appendChild(img);
             lightboxContent.appendChild(closeBtn);
             lightbox.appendChild(lightboxContent);
+            
+            // Append to body ensures it's outside any container that might have overflow:hidden
             document.body.appendChild(lightbox);
             
+            // Force the lightbox to be on top of everything
             lightbox.style.display = 'flex';
+            lightbox.style.zIndex = '999999';
             
             // Close lightbox when clicking close button or outside the image
             lightbox.addEventListener('click', function(e) {
                 if (e.target === lightbox || e.target === closeBtn) {
                     document.body.removeChild(lightbox);
+                }
+            });
+            
+            // Close on escape key
+            document.addEventListener('keydown', function escHandler(e) {
+                if (e.key === 'Escape') {
+                    document.body.removeChild(lightbox);
+                    document.removeEventListener('keydown', escHandler);
                 }
             });
         });
